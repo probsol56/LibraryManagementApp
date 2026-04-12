@@ -4,11 +4,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagementApp.Infrastructure.Persistence.Repositories;
 
-public class BookRepository : GenericRepository<Book>, IBookRepository
+public class BookRepository(AppDbContext context) : GenericRepository<Book>(context), IBookRepository
 {
-    public BookRepository(AppDbContext context) : base(context)
-    {
-    }
 
     public async Task<IEnumerable<Book>> GetBooksByAuthorIdAsync(Guid authorId)
     {

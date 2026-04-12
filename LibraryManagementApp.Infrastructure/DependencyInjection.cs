@@ -11,9 +11,7 @@ public static class DependencyInjection
     {
         services.AddDbContext<AppDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("Default")));
-        services.AddScoped<IBookRepository,BookRepository>();
-        services.AddScoped<IAuthorRepository,AuthorRepository>();
-        
+
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         return services;
     }

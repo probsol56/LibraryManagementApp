@@ -3,40 +3,34 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagementApp.Infrastructure.Persistence.Repositories;
 
-public class GenericRepository<T> : IGenericRepository<T> where T : class
+public class GenericRepository<T>(AppDbContext context) : IGenericRepository<T> where T : class
 {
-    protected readonly AppDbContext _context;
-    protected readonly DbSet<T> _dbSet;
-
-    public GenericRepository(AppDbContext context)
-    {
-        _context = context;
-        _dbSet = context.Set<T>();
-    }
+    protected readonly AppDbContext _context = context;
+    protected readonly DbSet<T> _dbSet = context.Set<T>();
 
     public async Task<T?> GetByIdAsync(Guid id)
     {
-        return await _context.Set<T>(). FindAsync(id);
+        return await _dbSet.FindAsync(id);
     }
 
     public async Task<IEnumerable<T>> GetAllAsync()
     {
-        return await _context.Set<T>(). ToListAsync();
+        return await _dbSet.ToListAsync();
     }
 
     public async Task<T> AddAsync(T entity)
     {
-        await _context.Set<T>().AddAsync(entity);
+        await _dbSet.AddAsync(entity);
         return entity;
     }
 
     public void Update(T entity)
     {
-        _context.Set<T>().Update(entity);
+        _dbSet.Update(entity);
     }
 
     public void Delete(T entity)
     {
-        _context.Set<T>().Remove(entity);
+        _dbSet.Remove(entity);
     }
 }

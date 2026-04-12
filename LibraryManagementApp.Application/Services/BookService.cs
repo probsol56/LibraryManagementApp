@@ -39,16 +39,8 @@ public class BookService
 
     public async Task BorrowBookAsync(Guid bookId)
     {
-        var book = await _unitOfWork.BookRepository.GetByIdAsync(bookId);
-        if (book == null)
-        {
-            throw new Exception("Book not found");
-        }
-        if (book.Stock == 0)
-        {
-            throw new InvalidOperationException("Book is out of stock");
-        }
-        book.Stock--;
+        var book = await _unitOfWork.BookRepository.GetByIdAsync(bookId) ?? throw new Exception("Book not found");
+        book.Borrow();
         _unitOfWork.BookRepository.Update(book);
         await _unitOfWork.SaveChangesAsync();
     }

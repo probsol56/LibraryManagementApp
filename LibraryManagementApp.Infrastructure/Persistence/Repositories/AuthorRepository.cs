@@ -3,9 +3,6 @@ using LibraryManagementApp.Domain.Entities;
 
 namespace LibraryManagementApp.Infrastructure.Persistence.Repositories;
 
-public class AuthorRepository : GenericRepository<Author>, IAuthorRepository
+public class AuthorRepository(AppDbContext context) : GenericRepository<Author>(context), IAuthorRepository
 {
-    public AuthorRepository(AppDbContext context) : base(context)
-    {
-    }
 }
