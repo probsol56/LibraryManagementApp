@@ -3,7 +3,7 @@ using LibraryManagementApp.Domain.Entities;
 
 namespace LibraryManagementApp.Application.Services;
 
-public class BookService : IBookService
+public class BookService 
 {
     private readonly IUnitOfWork _unitOfWork;
 
