@@ -1,20 +1,18 @@
 using FluentValidation;
 using MediatR;
+using ValidationException = LibraryManagementApp.Application.Common.Exceptions.ValidationException;
 
-public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
+namespace LibraryManagementApp.Application.Common.Behaviors;
+
+public class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> validators) : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
 {
-        private readonly IEnumerable<IValidator<TRequest>> _validators;
+        private readonly IEnumerable<IValidator<TRequest>> _validators = validators;
 
-        public ValidationBehavior(IEnumerable<IValidator<TRequest>> validators)
-        {
-            _validators = validators;
-        }
-
-        public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
             if(_validators.Any())
             {
-                return await next();
+                return await next(cancellationToken);
             }
 
             var context = new ValidationContext<TRequest>(request);
@@ -24,12 +22,12 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
                 .Where(f => f != null)
                 .ToList();
 
-            if (failures.Any())
+            if (failures.Count > 0)
             {
                 throw new ValidationException(failures);
             }
 
-            return await next();
+            return await next(cancellationToken);
         }
         
     
