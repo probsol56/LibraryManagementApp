@@ -1,9 +1,8 @@
-using LibraryManagementApp.Application.Books.Queries.GetAllBooks;
 using LibraryManagementApp.Application.Interfaces;
 using LibraryManagementApp.Domain.Entities;
 using MediatR;
 
-namespace LibraryManagementApp.Application.Books.Queries;
+namespace LibraryManagementApp.Application.Books.Queries.GetAllBooks;
 
 public class GetAllBooksHandler(IUnitOfWork unitOfWork) : IRequestHandler<GetAllBooksQuery, IEnumerable<Book>>
 {
