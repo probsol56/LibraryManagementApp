@@ -1,3 +1,4 @@
+using LibraryManagementApp.Application;
 using LibraryManagementApp.Application.Services;
 using LibraryManagementApp.Infrastructure;
 var builder = WebApplication.CreateBuilder(args);
