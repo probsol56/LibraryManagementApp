@@ -1,20 +1,13 @@
 namespace LibraryManagementApp.Domain.Entities;
 
-public class Book
+public class Book(Guid id, string title, Guid authorId, int stock)
 {
-    public Guid Id { get; private set; }
-    public string Title { get; private set; } = null!;
-    public Guid AuthorId { get; private set; }
-    public int Stock{get; private set;}
+    public Guid Id { get; private set; } = id;
+    public string Title { get; private set; } = title;
+    public Guid AuthorId { get; private set; } = authorId;
+    public int Stock { get; private set; } = stock;
 
     public Author Author { get; private set; } = null!;
-
-    public Book(Guid id, string title, Guid authorId)
-    {
-        Id = id;
-        Title = title;
-        AuthorId = authorId;
-    }
 
     public void Borrow()
     {
