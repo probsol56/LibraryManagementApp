@@ -1,5 +1,4 @@
 using LibraryManagementApp.Application;
-using LibraryManagementApp.Application.Services;
 using LibraryManagementApp.Infrastructure;
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,10 +8,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddControllers();
 
-builder.Services.AddMediatR(cfg =>
-    cfg.RegisterServicesFromAssembly(
-        typeof(ApplicationAssemblyMarker).Assembly  
-    ));
+builder.Services.AddApplication();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
