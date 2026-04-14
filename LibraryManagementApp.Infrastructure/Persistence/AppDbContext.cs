@@ -18,26 +18,23 @@ public class AppDbContext : DbContext
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
+        // collect domain events
+        var entities = ChangeTracker.Entries<BaseEntity>()
+        .Select(e => e.Entity)
+        .Where(e => e.DomainEvents.Any())
+        .ToList();
         // Save changes to database
         var result = await base.SaveChangesAsync(cancellationToken);
 
-        // collect domain events
-        var domainEvents = ChangeTracker
-            .Entries<BaseEntity>()
-            .Select(e => e.Entity)
-            .Where(e => e.DomainEvents.Any())
-            .SelectMany(e =>
-            {
-                var events = e.DomainEvents;
-                e.ClearDomainEvents(); // Clear করে নাও
-                return events;
-            })
-            .ToList();
-
         // publish domain events
-        foreach (var domainEvent in domainEvents)
+        foreach (var entity in entities)
         {
-            await _publisher.Publish(domainEvent, cancellationToken);
+            var domainEvents = entity.DomainEvents.ToList();
+            entity.ClearDomainEvents();
+            foreach (var domainEvent in domainEvents)
+            {
+                await _publisher.Publish(domainEvent, cancellationToken);
+            }
         }
 
         return result;
